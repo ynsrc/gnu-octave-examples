@@ -1,0 +1,722 @@
+# Help Texts
+
+#--------------------------------- int2 ---------------------------------------#
+
+#begin int2
+R = int2(v)
+
+Computes 2-fold (double) integral.
+
+E.g.: R = int2([ x*y, x 1 3, y 2 5 ])
+
+The above code integrates the function x*y with respect to x and y.
+The x boundaries are [1 3] and the y boundaries are [2 5].
+
+#end int2
+
+#--------------------------------- int3 ---------------------------------------#
+
+#begin int3
+R = int3(v)
+
+Computes double integral.
+
+E.g.: R = int3([ x*y, x 1 3, y 2 4, z 3 5 ])
+
+The above code integrates the function x*y with respect to x, y, and z.
+The x boundaries are [1 3], y boundaries are [2 4], and z boundaries are [3 5].
+
+#end int3
+
+#------------------------------- int2subs -------------------------------------#
+
+#begin int2subs
+R = int2subs(v)
+
+Computes a 2-fold integral and substitutes a constant value.
+
+E.g.: R = int2subs([ x*y, x 1 3, y 4 5, z 10 ])
+
+The above code integrates the function x*y with respect to x and y.
+The x boundaries are [1 3], and the y boundaries are [4 5].
+
+Finally, it calculates the result by substituting the value z=10 into equation.
+
+#end
+
+#-------------------------------  num2eng  ------------------------------------#
+
+#begin num2eng
+[engstr] = num2eng(value, unit="")
+
+Converts the entered number to engineering notation.
+
+E.g.: engstr = num2eng(3e-9, "C")
+
+In the code above, the engstr value is "3 nC".
+
+#end num2eng
+
+#------------------------------- vdetcoordsys  --------------------------------#
+
+#begin vdetcoordsys
+cs = vdetcoordsys(V)
+
+There are two different situations for this function;
+
+1. If V is a vector, it returns its symbols.
+
+   E.g.: cs = vdetcoordsys([2*rho^2 3*z 4*phi])
+
+Result of the above code will be cs = 'Cylindrical'.
+
+2. If V is a coordinate system as text, it returns symbols.
+
+   E.g.: cs = vdetcoordsys('Cylindrical')
+
+Result of the above code will be cs = [ rho phi z ].
+
+#end vdetcoordsys
+
+#-----------------------------  divergence_sym  -------------------------------#
+
+#begin divergence_sym
+Div = divergence_sym(V,X,[coordinate_system])
+
+It calculates the divergence of the given vector V in the specified coordinate 
+system according to the X symbols, and the result is scalar.
+
+If the coordinate system is not specified, it finds it automatically.
+
+E.g.: Div = divergence_sym([x*y x^2 z^3], [x y z], 'Cartesian')
+
+Result: y + 3*z^2
+
+#end divergence_sym
+
+#------------------------------ gradient_sym ----------------------------------#
+
+#begin gradient_sym
+gradientSym = gradient_sym(V,X,[coordinate_system])
+
+It calculates the gradient of the given scalar V expression in the specified 
+coordinate system according to the X symbols, and the result is a vector.
+
+If the coordinate system is not specified, it finds it automatically.
+
+E.g.: Div = gradient_sym(10*x*y/z, [x y z], 'Cartesian')
+
+Result: [10*y/z, 10*x/z, -10*x*y/z^2]
+
+#end gradient_sym
+
+#-------------------------------- curl_sym  -----------------------------------#
+
+#begin curl_sym
+CurlSym = curl_sym(V,X,[coordinate_system])
+
+It calculates the curl of the given vector V in the specified coordinate system 
+according to the X symbols, and the result is the vector.
+
+If the coordinate system is not specified, it finds it automatically.
+
+E.g.: curl_sym([2*rho 3*cos(phi) z^2], [rho phi z], 'Cylindrical')
+
+Result: [ 0, -2*x, (3*y^2-2)/x]
+
+#end curl_sym
+
+#--------------------------------  em_subs  -----------------------------------#
+
+#begin em_subs
+R = em_subs(F, X=[], Y=[])
+
+Substitutes Y values for X symbols in the F expression.
+
+The only difference from the normal subs function is that it also automatically
+substitutes the epsilon_0 value (10^-9/36*pi).
+
+Example:
+  syms a b;
+  em_subs(2*epsilon_0/a*b, [a b], [3 1e9 ])
+
+Result: 1/54*pi
+
+#end em_subs
+
+#-----------------------------  em_subs_vec  ---------------------------------#
+
+#begin em_subs_vec
+R = em_subs_vec(F, Y, [coordinate_system])
+
+In the expression F, substitutes the values of the symbols [ x y z ], 
+[rho phi z], or [r theta phi] from the vector Y sequentially.
+
+If the coordinate system is not specified, it tries to find it automatically.
+
+Example:
+  F = 2*rho-4*cos(phi)^2/(rho*z);
+  em_subs_vec(F, [ 3 sym('pi/3') 6 ]
+
+Result: 107/18
+
+#end em_subs_vec
+
+#-----------------------------  em_subs_vecd  ---------------------------------#
+
+#begin em_subs_vecd
+R = em_subs_vecd(F, Y, [coordinate_system])
+
+In the expression F, it takes the values of the symbols [x y z], [rho phi z], 
+or [r theta phi] from the vector Y and replaces them, respectively.
+
+The only difference from "em_subs_vec" is that the angles are in degrees.
+
+If the coordinate system is not specified, it tries to find it automatically.
+
+Example:
+  F = 2*rho-4*cos(phi)^2/(rho*z);
+  em_subs_vecd(F, [ 3 60 6 ])
+
+Result: 107/18
+
+#end em_subs_vecd
+
+#--------------------------------- vcart  -------------------------------------#
+
+#begin vcart
+R = vcart(V)
+R = vcart(x, y, z)
+
+This function creates vectors in Cartesian coordinates.
+
+It can also be used as a single V vector [1 3 5] or by writing
+the components separately.
+
+For the Symbolic library, it converts numbers to text and then to symbols 
+to avoid floating point errors.
+
+#end vcart
+
+#----------------------------------  vcyl  ------------------------------------#
+
+#begin vcyl
+R = vcyl(V)
+R = vcyl(rho, phi, z)
+
+This function creates vectors in cylindrical coordinates.
+
+It can also be used as a single V vector [0 30 5] or by writing
+the components separately.
+
+Attention: The phi value must be entered in degrees, vcyl converts 
+the phi angle to radians.
+
+For the Symbolic library, it converts numbers to text and then to symbols 
+to avoid floating point errors.
+
+#end vcyl
+
+#----------------------------------  vsph  ------------------------------------#
+
+#begin vsph
+R = vsph(V)
+R = vsph(r, theta, phi)
+
+This function creates vectors in spherical coordinates.
+
+It can also be used as a single V vector [0 30 60] or 
+by writing the components separately.
+
+Attention: theta and phi values must be entered in degrees, 
+vsph converts theta and phi angles to radians.
+
+For the Symbolic library, it converts numbers to text and then to symbols 
+to avoid floating point errors.
+
+#end vsph
+
+#--------------------------------  vec2sym  -----------------------------------#
+
+#begin vec2sym
+R = vec2sym(V, coordinate_system)
+
+Converts vector to symbolic expression, if there are angles, 
+they are converted to radians.
+
+It is mandatory to specify the coordinate system.
+
+E.g.: vec2sym([0 60 90], 'Spherical')
+
+Result: (sym) [ 0 pi/3 pi/2 ]
+
+#end vec2sym
+
+#--------------------------------  vec2dbl  -----------------------------------#
+
+#begin vec2dbl
+R = vec2dbl(P, coordinate_system)
+
+Converts a vector containing symbolic radian values (pi) to a degree angle number.
+
+#end vec2dbl
+
+#------------------------------- veclims2dbl  ---------------------------------#
+
+#begin veclims2dbl
+R = veclims2dbl(P, coordinate_system)
+
+It converts the vector consisting of lower and upper limit
+symbolic (pi) radian values into a normal number.
+
+The coordinate system must be specified as
+'Cartesian', 'Cylindrical' or 'Spherical'.
+
+E.g.: R = veclims2dbl([0 3 pi/2 pi/3 pi/6 pi/2], 'Spherical')
+
+Result: [0 3 90 60 30 90]
+
+#end veclims2dbl
+
+#------------------------------  em_vdeg2rad  ---------------------------------#
+
+#begin em_vdeg2rad
+R = em_vdeg2rad(V, coordinate_system)
+
+Converts values entered as degrees in the V vector to radians.
+
+V vector [ 1 30 60 ] or [ 1 30 60; 2 45 90; ...]
+or a 1x6 vector consisting of boundary values.
+
+E.g.: R = em_vdeg2rad([2 30 5], 'Cylindrical')
+
+Result: [ 2 pi/6 5 ]
+
+E.g.: R = em_vdeg2rad([0 3 0 180 0 360], 'Spherical')
+
+Result: [ 0 3 0 pi 0 2*pi ]
+
+#end em_vdeg2rad
+
+#-------------------------------  vec2strd  -----------------------------------#
+
+#begin vec2strd
+R = vec2strd(V, coordinate_system)
+
+Converts the vector V to text of the form "(30°, 60°, 90°)".
+
+It is mandatory to specify the coordinate system.
+
+#end vec2strd
+
+#--------------------------------  vec2str  -----------------------------------#
+
+#begin vec2str
+R = vec2str(V, coordinate_system)
+
+Converts the given vector to text as "+50(âx) -70(ây) +90(âz)".
+
+It is mandatory to specify the coordinate system.
+
+#end vec2str
+
+#------------------------------  em_calc_work  --------------------------------#
+
+#begin em_calc_work
+em_calc_work(E, Q, P, [coordinate_system])
+
+It calculates the work (W) done by moving the charge Q along the path P in 
+the electric field E, but does not return a value but writes it to the screen.
+
+E is a vector and Q is a charge such as 3e-9 (3 nC).
+
+P path should be like this [ 0 0 0; 3 0 0; 3 5 0; 3 5 9 ];
+
+E.g.: em_calc_work([x y z], 3e-9, [0 0 0; 5 0 0; 5 10 0])
+
+#end em_calc_work
+
+#------------------------------ em_calc_workd  --------------------------------#
+
+#begin em_calc_workd
+em_calc_workd(E, Q, P, [coordinate_system])
+
+The only difference between this function and "em_calc_work" is that the angles 
+in the P path are entered in degrees.
+
+It calculates the work (W) done by moving the charge Q along the path P in 
+the electric field E, but does not return a value but writes it to the screen.
+
+E is a vector and Q is a charge such as 3e-9 (3 nC).
+
+P path should be like this [ 0 0 0; 3 0 0; 3 5 0; 3 5 9 ];
+
+E.g.: em_calc_workd([rho phi z], 3e-9, [0 0 0; 0 30 0; 0 30 3])
+
+#end em_calc_workd
+
+#----------------------------- em_calc_energy  --------------------------------#
+
+#begin em_calc_energy
+em_calc_energy(Q, P)
+
+It calculates the total energy in the system due to the Q charges at P points.
+
+The Q vector is a single line 1xN dimensional [ 3-e9, 5-e9 ].
+
+P vector is [ 0 0 0; It is an Nx3 dimensional vector such as 0 5 10 ].
+
+E.g.: em_calc_energy([3e-9 5e-9], [ 0 0 0; 0 5 10 ])
+
+Result:
+Charges in system:
+     3 nC charge located at (0,0,0),
+     5 nC charge located at (0,5,10),
+then;
+
+Total enery of system = 12.0748 nJ
+
+#end em_calc_energy
+
+#---------------------------------  em_v2e  -----------------------------------#
+
+#begin em_v2e
+E = em_v2e(V, coordinate_system)
+
+Finds the electric field (E) by taking the gradient of the potential (V) expression.
+
+Formula:  E = -∇V
+
+E.g.: em_v2e(2*r*cos(theta)/sin(phi))
+
+Sonuç:
+  ⎡-2⋅cos(θ)   2⋅sin(θ)  2⋅cos(φ)⋅cos(θ)⎤
+  ⎢──────────  ────────  ───────────────⎥
+  ⎢  sin(φ)     sin(φ)       2          ⎥
+  ⎣                       sin (φ)⋅sin(θ)⎦
+
+#end em_v2e
+
+#---------------------------------  em_v2d  -----------------------------------#
+
+#begin em_v2d
+D = em_v2d(V, [coordinate_system], [epsilon_r=1])
+
+Calculates electric flux density (D) from the potential (V) expression.
+
+It is equal to D = em_e2d(em_v2e(V, coordinate_system), epsilon_r).
+
+#end em_v2d
+
+#--------------------------------  em_d2pv  -----------------------------------#
+
+#begin em_d2pv
+pV = em_d2pv(D, [coordinate_system])
+
+Calculates the volume charge density (pV) from the electric flux density (D).
+
+Formül: pV = ∇.D
+
+E.g.: em_d2pv([2*r cos(phi) sin(theta)/2])
+
+Sonuç:
+      cos(φ)⋅cos(θ)
+  6 + ─────────────
+         r⋅sin(θ)
+
+#end em_d2pv
+
+#---------------------------------  em_e2d  -----------------------------------#
+
+#begin em_e2d
+D = em_e2d(E, [epsilon_r = 1])
+
+Finds the electric flux density (D) from the electric field (E).
+
+If not specified, epsilon_r = 1.
+
+E.g.: em_e2d([2*r cos(phi) sin(theta)])
+
+Result: [2⋅ε₀⋅r  ε₀⋅cos(φ)  ε₀⋅sin(θ)]
+
+Example (epsilon_r=3):
+  em_e2d([2*r cos(phi) sin(theta)], 3)
+
+Result:
+  [6⋅ε₀⋅r  3⋅ε₀⋅cos(φ)  3⋅ε₀⋅sin(θ)]
+
+#end em_e2d
+
+#---------------------------------  em_d2e  -----------------------------------#
+
+#begin em_d2e
+E = em_d2e(D, [epsilon_r = 1])
+
+Finds the electric field (E) from the electric flux density (D).
+
+It is equal to E = D / (epsilon_0 * epsilon_r).
+
+E.g.: em_d2e([2*rho z*sin(phi)/3 rho/cos(phi)])
+
+Result:
+  ⎡2⋅ρ  z⋅sin(φ)      ρ    ⎤
+  ⎢───  ────────  ─────────⎥
+  ⎣ ε₀    3⋅ε₀    ε₀⋅cos(φ)⎦
+
+#end em_d2e
+
+#---------------------------------  em_f12  -----------------------------------#
+
+#begin em_f12
+F = em_f12(Q1, A, Q2, B, [epsilon_r=1], [coordinate_system])
+
+It calculates the F12 force applied by the charge Q1 
+at point A to the charge Q2 at point B.
+
+It may not work correctly outside the Cartesian coordinate system!
+
+E.g.: em_f12(3e-4, [1 2 3], -10e-4, [2 0 5])
+
+Result: [-100  200  -200]
+
+#end em_f12
+
+#--------------------------------  em_fnet  -----------------------------------#
+
+#begin em_fnet
+F = em_fnet(Q1, A, Qn, Bn, [epsilon_r=1], [coordinate_system])
+
+It calculates the total force (Fnet) applied by the Qn charges 
+at points Bn to the Q1 charge at point A.
+
+It may not work correctly outside the Cartesian coordinate system!
+
+Qn must be a 1xN vector and Bn must be an Nx3 vector.
+
+Example:
+  em_fnet(10e-9, [0 3 1], [1e-3 -2e-3], [ 3 2 -1; -1 -1 4 ])
+
+Result: [ -6.5121e-03  -3.7128e-03   7.5094e-03 ]
+
+#end em_fnet
+
+#-----------------------------  em_e_point  --------------------------------#
+
+#begin em_e_point
+E = em_e_point(Q, A, B, [epsilon_r=1])
+
+It calculates the electric field (E) caused by the point 
+charge Q at point A at point B.
+
+It may not work correctly outside the Cartesian coordinate system!
+
+E.g.: em_e_point(3e-9, [0 0 0], [5 5 5])
+
+Result: [ 0.2078   0.2078   0.2078 ]
+
+#end em_e_point
+
+#-----------------------------  em_e_linear  --------------------------------#
+
+#begin em_e_linear
+E = em_e_linear(pL, A, B, [epsilon_r=1], [coordinate_system])
+
+It calculates the electric field (E) created at point B by the infinite linear 
+charge distribution extending along the Inf component of vector A.
+
+It may not work correctly outside the Cartesian coordinate system!
+
+E.g.: em_e_linear(3e-9, [ 0 Inf 5 ], [2 2 2])
+
+Result: [ 8.3077   0   -12.4615 ]
+
+#end em_e_linear
+
+#-----------------------------  em_e_planar  -------------------------------#
+
+#begin em_e_planar
+E = em_e_planar(pS, A, B)
+
+A vektörünün Inf olan bileşenleri boyunca uzanan sonsuz yüzeysel
+yük dağılımının B noktasında oluşturduğu elektrik alanı (E) hesaplar.
+
+It may not work correctly outside the Cartesian coordinate system!
+
+E.g.: em_e_planar(3e-9, [5 Inf Inf], [1 1 1])
+
+Result: [ -169.6460   0   0 ]
+
+#end em_e_planar
+
+#------------------------------  em_intsurf  ----------------------------------#
+
+#begin em_intsurf
+[fS,fT,S] = em_intsurf(V, L, [coordinate_system])
+
+It calculates the surface integral on the L boundaries of the vector V.
+
+It takes the surface integral on the L boundaries of the vector V.
+
+Returns;
+fS: Fluxes from surfaces
+fT: Total flux through surfaces
+S : Shows in which directions the limited shape has a surface;
+
+Cartesian  : âx -âx ây -ây âz -âz
+Cylindrical: ise âρ -âρ âφ -âφ âz -âz
+Spherical  : âr -âr âθ -âθ âφ -âφ
+
+It means whether it has a surface (1 or 0).
+
+Example: [fS, fT, S ] = em_intsurf([x y z], [0 3 1 5 2 4])
+
+Result:
+  fS = [24  0  30  -6  48  -24]
+  fT = 72
+  S  = [ 1  1   1   1   1   1 ]
+
+#end em_intsurf
+
+#-----------------------------  em_intsurfd  ----------------------------------#
+
+#begin em_intsurfd
+[fS,fT,S] = em_intsurfd(V, L, [coordinate_system])
+
+Calculates the surface integral of the vector V on the L boundaries.
+
+The difference from em_intsurf is that the angles on the boundaries are degrees.
+
+If the coordinate system is not specified, it is found automatically.
+
+Returns;
+fS: Fluxes from surfaces
+fT: Total flux through surfaces
+S : Shows in which directions the limited shape has a surface;
+
+Cartesian  : âx -âx ây -ây âz -âz
+Cylindrical: ise âρ -âρ âφ -âφ âz -âz
+Spherical  : âr -âr âθ -âθ âφ -âφ
+
+It means whether it has a surface (1 or 0).
+
+Example: [fS, fT, S ] = em_intsurfd([rho*z sin(phi) 0], [0 3 30 60 0 3])
+
+Result:
+  fS =
+    [              ___            ]
+    [27*pi     9*\/ 3             ]
+    [-----  0  -------  -9/2  0  0]
+    [  4          2               ]
+
+  fT =
+      9   9*\/ 3    27*pi
+    - - + ------- + -----
+      2      2        4
+
+
+  S  = [ 1   0   1   1   1   1 ]
+
+#end em_intsurfd
+
+#-----------------------------  em_calc_gauss  --------------------------------#
+
+#begin em_calc_gauss
+[fS,psi] = em_calc_gauss(D, [N, L, L2, coord_sys])
+
+1. Finds the volume charge density (pV) from the electric flux density (D).
+2. Calculates the pV(N) density value at the specified point N.
+3. Calculates the number of surfaces of the object whose boundaries are given by L.
+4. Finds the fluxes (fS) coming from these surfaces and their sum.
+5. Verifies the divergence theorem.
+6. Calculates the flux coming out of the surface limited to L2.
+
+Example:
+  D = [ 3*r 2*cos(phi) r*sin(theta) ];
+  L = [ 0 3 0 sym(pi) 0 2*sym(pi) ];
+  L2 = [ 3 3 0 sym(pi)/2 0 sym(pi)/2 ];
+  N = [ 1 sym(pi)/6 sym(pi)/3 ];
+  [fS,psi] = em_calc_gauss(D,L,N,L2);
+
+Result:
+Electric flux density (D):
+  [3*r  2*cos(phi)  r*sin(theta)]
+
+a) Volume charge density pV (∇.D):
+      2*cos(phi)*cos(theta)
+  9 + ---------------------
+           r*sin(theta)
+
+b) Volume charge density at point (1,30,60) (pV) = 10.7321 C/m³
+
+c) 0<=r<=3, 0<=θ<=180, 0<=φ<=360 bounded sphere
+   There are 1 surface(s) in total.
+
+ âr directed electric flux ∫(D)dS,dS=r²sin(θ)dθdφ(âr) = 1.01788 kC
+   Ψ1 = 324*pi [C]
+
+
+Left side of the equation ∮(D)dS = Ψ = Q = 1.01788 kC
+  324*pi
+
+Right side of the equation ∫(pV)dV = Ψ = Q = 1.01788 kC
+  324*pi
+
+Since left is equal to right, Divergence theorem is satisfied.
+
+e) Flux leaving the bounded surface 3<=r<=3, 0<=θ<=90, 0<=φ<=90
+   Ψ = Q = 127.235 C
+
+#end em_calc_gauss
+
+#----------------------------  em_calc_gaussd  --------------------------------#
+
+#begin em_calc_gaussd
+[fS,psi] = em_calc_gaussd(D, [N, L, L2, coord_sys])
+
+The difference from "em_calc_gauss" is that the angles on 
+the boundaries are in degrees.
+
+1. Finds the volume charge density (pV) from the electric flux density (D).
+2. Calculates the pV(N) density value at the specified point N.
+3. Calculates the number of surfaces of the object whose boundaries are given by L.
+4. Finds the fluxes (fS) coming from these surfaces and their sum.
+5. Verifies the divergence theorem.
+6. Calculates the flux coming out of the surface limited to L2.
+
+Example:
+  D = [ 3*r 2*cos(phi) r*sin(theta) ];
+  L = [ 0 3 0 180 0 360 ];
+  L2 = [ 3 3 0 90 0 90 ];
+  N = [ 1 30 60 ];
+  [fS,psi] = em_calc_gaussd(D,L,N,L2);
+
+Electric flux density (D):
+  [3*r  2*cos(phi)  r*sin(theta)]
+
+a) Volume charge density pV (∇.D):
+      2*cos(phi)*cos(theta)
+  9 + ---------------------
+           r*sin(theta)
+
+b) Volume charge density at (1,30,60) (pV) = 10.7321 C/m³
+
+c) For 0<=r<=3, 0<=θ<=180, 0<=φ<=360 bounded sphere
+   There are 1 surface(s) in total.
+
+ âr directed electric flux ∫(D)dS,dS=r²sin(θ)dθdφ(âr) = 1.01788 kC
+   Ψ1 = 324*pi [C]
+
+
+Left side of the equation ∮(D)dS = Ψ = Q = 1.01788 kC
+  324*pi
+
+Right side of the equation ∫(pV)dV = Ψ = Q = 1.01788 kC
+  324*pi
+
+Since left is equal to right, Divergence theorem is satisfied.
+
+e) Flux leaving the bounded surface 3<=r<=3, 0<=θ<=90, 0<=φ<=90
+   Ψ = Q = 127.235 C
+
+#end em_calc_gaussd
+
